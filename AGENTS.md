@@ -6,7 +6,7 @@ and the names of the regression tests; this file is the constraint list.
 
 ## What this is
 
-`idea-git` ([p-prakapienka/git4vs](https://github.com/p-prakapienka/git4vs)) is a
+`git4vs` ([p-prakapienka/git4vs](https://github.com/p-prakapienka/git4vs)) is a
 VS Code extension that adds IntelliJ-style **changelists** and **revision
 diffs**. Apache-2.0. **No `git4idea` source was copied, and none may be.**
 
@@ -17,9 +17,9 @@ plugin is welded to IntelliJ platform APIs. Do not grow this into one.
 
 | Ask | Why not | Do this instead |
 | --- | --- | --- |
-| Commit graph, branch rails, rebase / reset / cherry-pick UI | Git Graph+ already does this and is maintained | `ideaGit.vcs.openGraph` in `src/integration/gitGraphPlus.ts` delegates to it |
+| Commit graph, branch rails, rebase / reset / cherry-pick UI | Git Graph+ already does this and is maintained | `git4vs.vcs.openGraph` in `src/integration/gitGraphPlus.ts` delegates to it |
 | Default IDEA keybindings (`Ctrl+K`, `Ctrl+Shift+K`, `Ctrl+T`) | Those are VS Code's chord prefix, Delete Line, and Go to Symbol | Opt-in snippet is in the README. Do not add `contributes.keybindings` |
-| One real `git stash` entry per inactive changelist | `stash push` removes those files from the working tree, so only one list would be visible | Assignments in `.git/idea-git/changelists.json`; content as commits on `refs/idea-git/changelists/<id>`. Real stash only for the explicit Shelve command |
+| One real `git stash` entry per inactive changelist | `stash push` removes those files from the working tree, so only one list would be visible | Assignments in `.git/git4vs/changelists.json`; content as commits on `refs/git4vs/changelists/<id>`. Real stash only for the explicit Shelve command |
 | `commit-tree` instead of `git commit` | Bypasses hooks, signing, and templates | Temporary index plus a real `git commit` |
 
 If asked for any of the above, say why and point here. Do not implement it.
@@ -65,7 +65,7 @@ Breaking these loses user work. Details and the named tests are in HANDOVER
 5. Never `git clean -fd`. Only the exact untracked paths in that list, each
    `:(literal)`-wrapped.
 6. Assignments stay inside `.git/` so they cannot be committed. Snapshot
-   objects stay on `refs/idea-git/changelists/<id>`. Do not invent a second
+   objects stay on `refs/git4vs/changelists/<id>`. Do not invent a second
    store in the working tree.
 7. List-only menu `when` clauses match `/^changelist\./`, not `/^changelist/`.
    The shorter form also matches `changelistFile` and puts Rollback on file
@@ -87,7 +87,7 @@ Tests need a real `git` on `PATH`. They create throwaway repos in the OS temp
 dir. No VS Code is required, and CI does not have one.
 
 `.github/workflows/build.yml` runs typecheck, test, build, and package on
-every push to `main` and uploads the `idea-git-vsix` artifact. Do not merge a
+every push to `main` and uploads the `git4vs-vsix` artifact. Do not merge a
 change that breaks it.
 
 ## Scope

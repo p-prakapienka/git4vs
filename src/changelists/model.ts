@@ -8,7 +8,7 @@ export interface Changelist {
   /** Repo-relative paths assigned to this list. */
   paths: string[];
   /**
-   * Hash of the snapshot commit object under refs/idea-git/changelists/<id>,
+   * Hash of the snapshot commit object under refs/git4vs/changelists/<id>,
    * if one has been written. Purely a recovery aid.
    */
   snapshot?: string;
@@ -134,7 +134,7 @@ export function movePaths(
 }
 
 /**
- * Slug used for the ref name under refs/idea-git/changelists/.
+ * Slug used for the ref name under refs/git4vs/changelists/.
  *
  * git-check-ref-format rejects a component that is empty, starts with a dot,
  * ends with a dot or ".lock", or contains "..", so all of those are ruled out

@@ -25,7 +25,7 @@ interface Ctx {
 }
 
 async function freshRepo(files = ['a.txt', 'b.txt', 'c.txt']): Promise<Ctx> {
-  const repo = await fs.mkdtemp(path.join(os.tmpdir(), 'idea-git-ops-'));
+  const repo = await fs.mkdtemp(path.join(os.tmpdir(), 'git4vs-ops-'));
   repos.push(repo);
   const git = new GitRunner(repo);
   await git.run(['init', '--initial-branch=main']);
@@ -269,7 +269,7 @@ describe('commitEntries', () => {
   });
 
   test('works in a repository with no commits yet', async () => {
-    const repo = await fs.mkdtemp(path.join(os.tmpdir(), 'idea-git-unborn-'));
+    const repo = await fs.mkdtemp(path.join(os.tmpdir(), 'git4vs-unborn-'));
     repos.push(repo);
     const git = new GitRunner(repo);
     await git.run(['init', '--initial-branch=main']);
@@ -393,7 +393,7 @@ describe('rollbackEntries', () => {
   });
 
   test('works in a repository with no commits yet', async () => {
-    const repo = await fs.mkdtemp(path.join(os.tmpdir(), 'idea-git-unborn-rb-'));
+    const repo = await fs.mkdtemp(path.join(os.tmpdir(), 'git4vs-unborn-rb-'));
     repos.push(repo);
     const git = new GitRunner(repo);
     await git.run(['init', '--initial-branch=main']);

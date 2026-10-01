@@ -1,4 +1,4 @@
-# IDEA Git — Changelists & Diff
+# git4vs — Changelists & Diff
 
 A VS Code extension for people moving over from IntelliJ IDEA who miss
 `git4idea`. It deliberately implements **only the parts nothing else covers**
@@ -25,7 +25,7 @@ solved in the VS Code ecosystem:
 | **Compare with revision / branch / two revisions, file history diff** | **this extension** |
 | Commit / Push / Update buttons and IDEA keybindings | **this extension** |
 
-Install Git Graph+ alongside this. `IDEA Git: Show Git Log` forwards to it
+Install Git Graph+ alongside this. `git4vs: Show Git Log` forwards to it
 (`gitGraphPlus.open`), falling back to the older `mhutchie.git-graph` and then
 to VS Code's own Source Control Graph.
 
@@ -45,7 +45,7 @@ Named groups of uncommitted changes, as in IDEA:
   bisect is in progress, with a message saying so. Committing part of the tree
   in those states is destructive in ways that are hard to undo.
 - **Shelve** moves a list out of the working tree into a real `git stash`
-  entry tagged `idea-git-shelf:<name>`; **Unshelve** restores it.
+  entry tagged `git4vs-shelf:<name>`; **Unshelve** restores it.
 - **Rollback** reverts a list. Untracked files are removed with an explicit
   pathspec, never a bare `git clean -fd`.
 - **Renames carry both names.** Committing or reverting a renamed file handles
@@ -66,18 +66,18 @@ and clean paths asserting the neighbours survive.
 Two layers, and the split is deliberate:
 
 **Assignments** (which file is in which list) live in
-`.git/idea-git/changelists.json`. `.git` is the one directory guaranteed never
+`.git/git4vs/changelists.json`. `.git` is the one directory guaranteed never
 to be tracked, so this metadata can't end up in a commit. Writes are
 write-then-rename, and the file is re-validated on load — a corrupt or
 hand-edited file degrades to a clean state instead of breaking the view.
 
 **Content** is snapshotted into real git commit objects under
-`refs/idea-git/changelists/<id>`. The ref anchors the objects against `gc`, so
+`refs/git4vs/changelists/<id>`. The ref anchors the objects against `gc`, so
 a snapshot survives branch switches, resets, reboots and a deleted metadata
 file:
 
 ```
-git for-each-ref refs/idea-git/changelists      # what snapshots exist
+git for-each-ref refs/git4vs/changelists      # what snapshots exist
 git show <hash>:path/to/file                    # recover one file
 git diff HEAD <hash>                            # see the whole list
 ```
@@ -107,7 +107,7 @@ git diff HEAD <hash>                            # see the whole list
 - **Show Diff for Changelist** — walk a list's files.
 - Clicking a file in the Changelists view opens HEAD ↔ working tree.
 
-Revision content is served through an `idea-git-rev:` document provider. The
+Revision content is served through an `git4vs-rev:` document provider. The
 URI keeps the real file path so VS Code picks the right language mode — these
 diffs are syntax-highlighted. Immutable revisions (hashes) are cached; symbolic
 refs like `HEAD` are not.
@@ -124,10 +124,10 @@ If you want the muscle memory anyway, paste this into `keybindings.json`
 
 ```jsonc
 [
-  { "key": "ctrl+k",       "command": "ideaGit.changelist.commit", "when": "!terminalFocus" },
-  { "key": "ctrl+shift+k", "command": "ideaGit.vcs.push",          "when": "!terminalFocus" },
-  { "key": "ctrl+t",       "command": "ideaGit.vcs.update",        "when": "!terminalFocus" },
-  { "key": "ctrl+d",       "command": "ideaGit.diff.withRevision", "when": "!terminalFocus" }
+  { "key": "ctrl+k",       "command": "git4vs.changelist.commit", "when": "!terminalFocus" },
+  { "key": "ctrl+shift+k", "command": "git4vs.vcs.push",          "when": "!terminalFocus" },
+  { "key": "ctrl+t",       "command": "git4vs.vcs.update",        "when": "!terminalFocus" },
+  { "key": "ctrl+d",       "command": "git4vs.diff.withRevision", "when": "!terminalFocus" }
 ]
 ```
 
@@ -138,10 +138,10 @@ rather keep.
 
 | Setting | Default | |
 | --- | --- | --- |
-| `ideaGit.changelists.autoAssignToActive` | `true` | New changes join the active list |
-| `ideaGit.changelists.persistIntervalMs` | `4000` | Snapshot cadence; `0` disables |
-| `ideaGit.diff.openSideBySide` | `true` | |
-| `ideaGit.integration.gitGraphPlus` | `true` | Forward log/graph commands to Git Graph+ |
+| `git4vs.changelists.autoAssignToActive` | `true` | New changes join the active list |
+| `git4vs.changelists.persistIntervalMs` | `4000` | Snapshot cadence; `0` disables |
+| `git4vs.diff.openSideBySide` | `true` | |
+| `git4vs.integration.gitGraphPlus` | `true` | Forward log/graph commands to Git Graph+ |
 
 ## Build
 
@@ -154,7 +154,7 @@ npx @vscode/vsce package --skip-license
 ```
 
 Every push to `main` runs that on GitHub Actions and uploads
-`idea-git-<version>.vsix` as the **idea-git-vsix** artifact on the run
+`git4vs-<version>.vsix` as the **git4vs-vsix** artifact on the run
 (Actions → Build → the run → Artifacts). It is kept for 90 days.
 
 ## Known limitations

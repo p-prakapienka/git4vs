@@ -1,10 +1,10 @@
-# HANDOVER — `idea-git` VS Code extension
+# HANDOVER — `git4vs` VS Code extension
 
 **For whoever picks this up next (human or assistant). Read this before touching code.**
 
 Everything here is self-contained; you do not need the originating conversation.
 State as of 2026-10-01: builds clean, typechecks clean, 40/40 tests pass,
-packaged as `idea-git-0.1.0.vsix`.
+packaged as `git4vs-0.1.0.vsix`.
 
 ---
 
@@ -62,7 +62,7 @@ claims to do everything but has ~3.8k installs, one review, and no update since
 Nov 2024 — not on anyone's critical path.
 
 **Consequence:** this extension deliberately has **no commit graph**.
-`ideaGit.vcs.openGraph` forwards to Git Graph+ (`gitGraphPlus.open`), falls back
+`git4vs.vcs.openGraph` forwards to Git Graph+ (`gitGraphPlus.open`), falls back
 to `mhutchie`'s `git-graph.view`, then to VS Code's built-in
 `scm.showHistoryGraph`, then offers to install Git Graph+. See
 `src/integration/gitGraphPlus.ts`. If a future request is "add a graph", push
@@ -73,7 +73,7 @@ back and point here first.
 ## 3. Project map
 
 ```
-idea-git/
+git4vs/
 ├─ package.json            manifest: 18 commands, 1 view, 4 settings, NO keybindings (§4.2)
 ├─ esbuild.js              bundles src/extension.ts → dist/extension.js (vscode external)
 ├─ tsconfig.json           main build (strict, noUnusedLocals)
@@ -95,7 +95,7 @@ idea-git/
    │  ├─ manager.ts                per-repo orchestration, serialised mutation queue, events
    │  └─ treeView.ts               TreeDataProvider + TreeDragAndDropController
    ├─ diff/
-   │  ├─ revisionProvider.ts       TextDocumentContentProvider for scheme `idea-git-rev`
+   │  ├─ revisionProvider.ts       TextDocumentContentProvider for scheme `git4vs-rev`
    │  └─ commands.ts               compare-with-revision/branch/two-revisions, file history
    └─ integration/gitGraphPlus.ts  delegation to a graph extension, every call guarded
 └─ test/
@@ -124,14 +124,14 @@ the separate thing that removes content.
 
 What was built instead — two layers:
 
-1. **Assignments** (which file is in which list) → `.git/idea-git/changelists.json`.
+1. **Assignments** (which file is in which list) → `.git/git4vs/changelists.json`.
    `.git` is the one directory guaranteed never to be tracked, so this metadata
    can't reach a commit. Written via write-then-rename. Re-validated on every
    load (`normalizeState`) because the file can be hand-edited or written by an
    older build — a corrupt file degrades to a clean state rather than breaking
    the view.
 
-2. **Content** → real commit objects under `refs/idea-git/changelists/<id>`,
+2. **Content** → real commit objects under `refs/git4vs/changelists/<id>`,
    built in a **temporary index** (`GIT_INDEX_FILE` + `read-tree` →
    `update-index` → `write-tree` → `commit-tree` → `update-ref`). A ref anchors
    the objects against `gc`, so a snapshot survives branch switches, resets,
@@ -140,14 +140,14 @@ What was built instead — two layers:
 
    Recovery is plain git:
    ```bash
-   git for-each-ref refs/idea-git/changelists
+   git for-each-ref refs/git4vs/changelists
    git show <hash>:path/to/file
    git diff HEAD <hash>
    ```
 
 3. **Real stashes are still used** — for the explicit **Shelve** command, where
    removing the changes from the tree *is* the point. Tagged
-   `idea-git-shelf:<name>` so `listShelves()` can find them again.
+   `git4vs-shelf:<name>` so `listShelves()` can find them again.
 
 ### 4.2 No default keybindings (deviation from "IDEA muscle memory")
 
@@ -238,11 +238,11 @@ Never `clean -fd`. Only the exact untracked paths in the list, each
 
 - `viewItem =~ /^changelist/` also matched `changelistFile`, putting list-only
   actions (incl. Rollback) on every file row. It is now `/^changelist\./`.
-- `ideaGit.diff.withRevision` is contributed to the tree view, the editor title
+- `git4vs.diff.withRevision` is contributed to the tree view, the editor title
   menu *and* the palette, so its argument may be a `ChangelistNode`, a `Uri`, or
   nothing. `toUri()` in `extension.ts` normalises — passing a node straight
   through threw inside `path.relative`.
-- A contributed `ideaGit.fileHistory` view had no provider and rendered
+- A contributed `git4vs.fileHistory` view had no provider and rendered
   permanently empty; removed.
 - `npm test` globbed `dist-test/*.test.js` and silently ran **zero** tests while
   exiting 0. Fixed to `dist-test/test/*.test.js`.
@@ -259,7 +259,7 @@ Never `clean -fd`. Only the exact untracked paths in the list, each
 ## 6. Build, test, package
 
 ```bash
-cd /home/claude/idea-git
+cd /home/claude/git4vs
 npm install
 npm run typecheck     # tsc --noEmit, strict
 npm run build         # esbuild → dist/extension.js (~31 KB)
@@ -271,7 +271,7 @@ Tests create throwaway repos under the OS temp dir and clean up in `after()`.
 They need a real `git` binary (verified against 2.43). No VS Code required —
 that is deliberate, see §3.
 
-To install locally: `code --install-extension idea-git-0.1.0.vsix`, or
+To install locally: `code --install-extension git4vs-0.1.0.vsix`, or
 Extensions panel → `⋯` → *Install from VSIX*.
 
 ---
@@ -285,7 +285,7 @@ unshelve round-trip, state normalisation and reconciliation.
 
 **Written, typechecked, reviewed — but never run inside VS Code:** the entire UI
 layer. Tree view rendering, drag and drop, menu `when` clauses, command
-argument plumbing, the `idea-git-rev` content provider, progress/error toasts.
+argument plumbing, the `git4vs-rev` content provider, progress/error toasts.
 **0.1.0 is "ready to try", not "battle-tested."** Paviel was told this.
 
 **The obvious next step is an F5 smoke test** in an Extension Development Host

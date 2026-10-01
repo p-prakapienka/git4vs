@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import { GitRunner } from '../git/cli';
 import { Porcelain } from '../git/porcelain';
 
-export const REVISION_SCHEME = 'idea-git-rev';
+export const REVISION_SCHEME = 'git4vs-rev';
 
 interface RevisionQuery {
   repoRoot: string;

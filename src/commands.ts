@@ -205,7 +205,7 @@ export async function shelveChangelist(deps: CommandDeps, node?: ChangelistNode)
   await withProgress(`Shelving "${node.list.name}"`, deps, async () => {
     await manager.shelveList(node.list.id);
     vscode.window.showInformationMessage(
-      `Shelved "${node.list.name}" — restore it with IDEA Git: Unshelve.`,
+      `Shelved "${node.list.name}" — restore it with git4vs: Unshelve.`,
     );
   });
 }

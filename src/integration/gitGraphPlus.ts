@@ -18,7 +18,7 @@ const GIT_GRAPH_LEGACY = 'mhutchie.git-graph';
 export class GraphIntegration {
   private get enabled(): boolean {
     return vscode.workspace
-      .getConfiguration('ideaGit')
+      .getConfiguration('git4vs')
       .get<boolean>('integration.gitGraphPlus', true);
   }
 

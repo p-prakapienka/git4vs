@@ -19,7 +19,7 @@ async function openDiff(
   title: string,
 ): Promise<void> {
   const preview = !vscode.workspace
-    .getConfiguration('ideaGit')
+    .getConfiguration('git4vs')
     .get<boolean>('diff.openSideBySide', true);
   await vscode.commands.executeCommand('vscode.diff', left, right, title, {
     preview,

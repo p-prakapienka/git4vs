@@ -27,7 +27,7 @@ async function write(rel: string, content: string): Promise<void> {
 }
 
 before(async () => {
-  repo = await fs.mkdtemp(path.join(os.tmpdir(), 'idea-git-test-'));
+  repo = await fs.mkdtemp(path.join(os.tmpdir(), 'git4vs-test-'));
   git = new GitRunner(repo);
   porcelain = new Porcelain(git);
   await git.run(['init', '--initial-branch=main']);
@@ -183,7 +183,7 @@ describe('ChangelistStore snapshots', () => {
     await store.save(emptyState());
     const tracked = await porcelain.status();
     assert.ok(
-      !tracked.some((e) => e.path.includes('idea-git')),
+      !tracked.some((e) => e.path.includes('git4vs')),
       'changelist metadata must not appear as a working tree change',
     );
   });

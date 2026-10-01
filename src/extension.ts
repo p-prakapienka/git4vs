@@ -8,12 +8,12 @@ import * as diff from './diff/commands';
 import * as cmd from './commands';
 
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
-  const output = vscode.window.createOutputChannel('IDEA Git');
+  const output = vscode.window.createOutputChannel('git4vs');
   context.subscriptions.push(output);
 
   const api = await getBuiltInGitApi();
   if (!api) {
-    output.appendLine('The built-in Git extension is unavailable; IDEA Git is inactive.');
+    output.appendLine('The built-in Git extension is unavailable; git4vs is inactive.');
     return;
   }
 
@@ -28,7 +28,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     vscode.workspace.registerTextDocumentContentProvider(REVISION_SCHEME, revisions),
   );
 
-  const view = vscode.window.createTreeView<ChangelistNode>('ideaGit.changelists', {
+  const view = vscode.window.createTreeView<ChangelistNode>('git4vs.changelists', {
     treeDataProvider: tree,
     dragAndDropController: tree,
     canSelectMany: true,
@@ -67,38 +67,38 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   await Promise.all(api.repositories.map(addRepository));
 
   register(context, {
-    'ideaGit.changelist.create': (n?: ChangelistNode) => cmd.createChangelist(deps, n),
-    'ideaGit.changelist.rename': (n?: ChangelistNode) => cmd.renameChangelist(deps, n),
-    'ideaGit.changelist.delete': (n?: ChangelistNode) => cmd.deleteChangelist(deps, n),
-    'ideaGit.changelist.setActive': (n?: ChangelistNode) => cmd.setActiveChangelist(deps, n),
-    'ideaGit.changelist.moveTo': (n?: ChangelistNode) => cmd.moveToChangelist(deps, n),
-    'ideaGit.changelist.commit': (n?: ChangelistNode) => cmd.commitChangelist(deps, n),
-    'ideaGit.changelist.rollback': (n?: ChangelistNode) => cmd.rollbackChangelist(deps, n),
-    'ideaGit.changelist.shelve': (n?: ChangelistNode) => cmd.shelveChangelist(deps, n),
-    'ideaGit.changelist.unshelve': (n?: ChangelistNode) => cmd.unshelve(deps, n),
-    'ideaGit.changelist.refresh': async () => {
+    'git4vs.changelist.create': (n?: ChangelistNode) => cmd.createChangelist(deps, n),
+    'git4vs.changelist.rename': (n?: ChangelistNode) => cmd.renameChangelist(deps, n),
+    'git4vs.changelist.delete': (n?: ChangelistNode) => cmd.deleteChangelist(deps, n),
+    'git4vs.changelist.setActive': (n?: ChangelistNode) => cmd.setActiveChangelist(deps, n),
+    'git4vs.changelist.moveTo': (n?: ChangelistNode) => cmd.moveToChangelist(deps, n),
+    'git4vs.changelist.commit': (n?: ChangelistNode) => cmd.commitChangelist(deps, n),
+    'git4vs.changelist.rollback': (n?: ChangelistNode) => cmd.rollbackChangelist(deps, n),
+    'git4vs.changelist.shelve': (n?: ChangelistNode) => cmd.shelveChangelist(deps, n),
+    'git4vs.changelist.unshelve': (n?: ChangelistNode) => cmd.unshelve(deps, n),
+    'git4vs.changelist.refresh': async () => {
       await Promise.all([...managers.values()].map((m) => m.refresh()));
     },
 
-    'ideaGit.diff.openChange': (n: ChangelistNode) => diff.openChange(n),
+    'git4vs.diff.openChange': (n: ChangelistNode) => diff.openChange(n),
     // These are contributed to the tree view, the editor title menu AND the
     // command palette, so the argument may be a ChangelistNode, a Uri, or
     // nothing at all. Normalise before use -- passing a node straight through
     // as a Uri throws deep inside path.relative.
-    'ideaGit.diff.withRevision': (a?: DiffArg) => diff.compareWithRevision(api, toUri(a)),
-    'ideaGit.diff.withBranch': (a?: DiffArg) => diff.compareWithBranch(api, toUri(a)),
-    'ideaGit.diff.betweenRevisions': (a?: DiffArg) =>
+    'git4vs.diff.withRevision': (a?: DiffArg) => diff.compareWithRevision(api, toUri(a)),
+    'git4vs.diff.withBranch': (a?: DiffArg) => diff.compareWithBranch(api, toUri(a)),
+    'git4vs.diff.betweenRevisions': (a?: DiffArg) =>
       diff.compareBetweenRevisions(api, toUri(a)),
-    'ideaGit.diff.fileHistory': (a?: DiffArg) => diff.showFileHistory(api, toUri(a)),
-    'ideaGit.diff.changelist': (n?: ChangelistNode) => {
+    'git4vs.diff.fileHistory': (a?: DiffArg) => diff.showFileHistory(api, toUri(a)),
+    'git4vs.diff.changelist': (n?: ChangelistNode) => {
       if (n?.kind !== 'list') return Promise.resolve();
       const manager = managers.get(n.managerKey);
       return manager ? diff.diffChangelist(manager, n.list.id) : Promise.resolve();
     },
 
-    'ideaGit.vcs.update': () => cmd.updateProject(deps),
-    'ideaGit.vcs.push': () => cmd.push(deps),
-    'ideaGit.vcs.openGraph': () => graph.openGraph(),
+    'git4vs.vcs.update': () => cmd.updateProject(deps),
+    'git4vs.vcs.push': () => cmd.push(deps),
+    'git4vs.vcs.openGraph': () => graph.openGraph(),
   });
 
   context.subscriptions.push({
@@ -109,7 +109,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   });
 
   output.appendLine(
-    `IDEA Git active. Repositories: ${api.repositories.length}. ` +
+    `git4vs active. Repositories: ${api.repositories.length}. ` +
       `Graph delegate: ${graph.installedGraphExtension ?? 'built-in'}.`,
   );
 }

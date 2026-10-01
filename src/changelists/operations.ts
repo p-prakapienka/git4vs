@@ -126,7 +126,7 @@ export async function commitEntries(
   const hasHead = await porcelain.hasHead();
   const paths = pathsOf(entries);
 
-  const scratch = await fs.mkdtemp(path.join(os.tmpdir(), 'idea-git-commit-'));
+  const scratch = await fs.mkdtemp(path.join(os.tmpdir(), 'git4vs-commit-'));
   const tmpIndex = path.join(scratch, 'index');
   const env = { GIT_INDEX_FILE: tmpIndex };
 

@@ -98,7 +98,7 @@ export class ChangelistManager implements vscode.Disposable {
 
       this.entriesByPath = new Map(entries.map((e) => [e.path, e]));
       const autoAssign = vscode.workspace
-        .getConfiguration('ideaGit')
+        .getConfiguration('git4vs')
         .get<boolean>('changelists.autoAssignToActive', true);
 
       this.state = reconcile(loaded, [...this.entriesByPath.keys()], autoAssign);
@@ -190,7 +190,7 @@ export class ChangelistManager implements vscode.Disposable {
 
   private scheduleSnapshots(): void {
     const interval = vscode.workspace
-      .getConfiguration('ideaGit')
+      .getConfiguration('git4vs')
       .get<number>('changelists.persistIntervalMs', 4000);
     if (interval > 0) {
       this.snapshotTimer = setInterval(() => {

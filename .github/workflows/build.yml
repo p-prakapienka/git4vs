@@ -40,7 +40,7 @@ jobs:
       - name: Upload VSIX
         uses: actions/upload-artifact@v4
         with:
-          name: idea-git-vsix
+          name: git4vs-vsix
           path: "*.vsix"
           if-no-files-found: error
           retention-days: 90

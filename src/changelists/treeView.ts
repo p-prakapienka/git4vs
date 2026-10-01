@@ -34,8 +34,8 @@ const STATUS_COLOR: Record<WorkingTreeEntry['status'], string> = {
 export class ChangelistTreeProvider
   implements vscode.TreeDataProvider<ChangelistNode>, vscode.TreeDragAndDropController<ChangelistNode>
 {
-  readonly dropMimeTypes = ['application/vnd.code.tree.ideagit.changelists'];
-  readonly dragMimeTypes = ['application/vnd.code.tree.ideagit.changelists'];
+  readonly dropMimeTypes = ['application/vnd.code.tree.git4vs.changelists'];
+  readonly dragMimeTypes = ['application/vnd.code.tree.git4vs.changelists'];
 
   private readonly _onDidChangeTreeData = new vscode.EventEmitter<void>();
   readonly onDidChangeTreeData = this._onDidChangeTreeData.event;
@@ -152,7 +152,7 @@ export class ChangelistTreeProvider
     }`;
     // Clicking a file opens the same diff IDEA opens: working tree vs HEAD.
     item.command = {
-      command: 'ideaGit.diff.openChange',
+      command: 'git4vs.diff.openChange',
       title: 'Open Change',
       arguments: [node],
     };

@@ -12,8 +12,8 @@ import {
   refSlug,
 } from './model';
 
-export const REF_NAMESPACE = 'refs/idea-git/changelists';
-export const SHELF_PREFIX = 'idea-git-shelf:';
+export const REF_NAMESPACE = 'refs/git4vs/changelists';
+export const SHELF_PREFIX = 'git4vs-shelf:';
 
 /**
  * Persistence for changelists.
@@ -25,7 +25,7 @@ export const SHELF_PREFIX = 'idea-git-shelf:';
  *    reach a commit -- .git is the one directory guaranteed not to be tracked.
  *
  *  - Content is snapshotted into real git commit objects under
- *    refs/idea-git/changelists/<id>. A ref anchors the objects against gc, so
+ *    refs/git4vs/changelists/<id>. A ref anchors the objects against gc, so
  *    a snapshot survives branch switches, resets, reboots and a deleted
  *    metadata file. Crucially this uses a temporary index, so the working tree
  *    is never touched -- unlike `git stash push`, which would yank an inactive
@@ -50,7 +50,7 @@ export class ChangelistStore {
   }
 
   private get stateFile(): string {
-    return path.join(this.gitDir, 'idea-git', 'changelists.json');
+    return path.join(this.gitDir, 'git4vs', 'changelists.json');
   }
 
   async load(): Promise<ChangelistState> {
@@ -77,7 +77,7 @@ export class ChangelistStore {
 
   /**
    * Snapshot one changelist's current content into a commit object and point
-   * refs/idea-git/changelists/<id> at it. Returns the commit hash, or
+   * refs/git4vs/changelists/<id> at it. Returns the commit hash, or
    * undefined when the list is empty.
    *
    * The working tree and the real index are untouched: all staging happens in
@@ -91,7 +91,7 @@ export class ChangelistStore {
 
     const hasHead = await this.porcelain.hasHead();
     const tmpIndex = path.join(
-      await fs.mkdtemp(path.join(os.tmpdir(), 'idea-git-')),
+      await fs.mkdtemp(path.join(os.tmpdir(), 'git4vs-')),
       'index',
     );
     const env = { GIT_INDEX_FILE: tmpIndex };
@@ -113,7 +113,7 @@ export class ChangelistStore {
       const tree = await this.git.text(['write-tree'], { env });
       const parents = hasHead ? ['-p', 'HEAD'] : [];
       const message =
-        `idea-git snapshot: ${list.name}\n\n` +
+        `git4vs snapshot: ${list.name}\n\n` +
         `changelist-id: ${list.id}\n` +
         `files: ${list.paths.length}\n`;
 
