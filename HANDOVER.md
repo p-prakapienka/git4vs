@@ -263,7 +263,7 @@ npm install
 npm run typecheck     # tsc --noEmit, strict
 npm run build         # esbuild → dist/extension.js (~31 KB)
 npm test              # pretest compiles, then 40 node:test tests
-npx @vscode/vsce package --allow-missing-repository --skip-license
+npx @vscode/vsce package --skip-license
 ```
 
 Tests create throwaway repos under the OS temp dir and clean up in `after()`.

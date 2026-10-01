@@ -1,0 +1,46 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: write
+
+jobs:
+  vsix:
+    name: Test and package VSIX
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Test
+        run: npm test
+
+      - name: Build
+        run: npm run build
+
+      - name: Package VSIX
+        run: npx --yes @vscode/vsce@4.0.0 package --skip-license
+
+      - name: Upload VSIX
+        uses: actions/upload-artifact@v4
+        with:
+          name: idea-git-vsix
+          path: "*.vsix"
+          if-no-files-found: error
+          retention-days: 90

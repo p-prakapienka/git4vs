@@ -5,6 +5,10 @@
   "version": "0.1.0",
   "publisher": "local",
   "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/p-prakapienka/git4vs.git"
+  },
   "engines": {
     "vscode": "^1.90.0"
   },

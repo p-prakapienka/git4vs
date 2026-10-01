@@ -148,8 +148,12 @@ npm install
 npm run build       # esbuild bundle -> dist/extension.js
 npm run typecheck
 npm test            # 40 tests against throwaway git repos
-npx @vscode/vsce package
+npx @vscode/vsce package --skip-license
 ```
+
+Every push to `main` runs that on GitHub Actions and uploads
+`idea-git-<version>.vsix` as the **idea-git-vsix** artifact on the run
+(Actions → Build → the run → Artifacts). It is kept for 90 days.
 
 ## Known limitations
 
