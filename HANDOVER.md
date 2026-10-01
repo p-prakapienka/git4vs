@@ -79,7 +79,8 @@ idea-git/
 ├─ tsconfig.json           main build (strict, noUnusedLocals)
 ├─ tsconfig.test.json      test build; rootDir "." → output lands in dist-test/test/
 ├─ README.md               user-facing docs
-├─ HANDOVER.md             this file
+├─ HANDOVER.md             this file — design rationale and named regression tests
+├─ AGENTS.md               constraints for coding agents; read it before editing
 └─ src/
    ├─ extension.ts                 activate(): wires API, tree view, commands, per-repo managers
    ├─ commands.ts                  command implementations (prompts, confirmations, progress, errors)

@@ -6,6 +6,8 @@ and delegates the rest.
 
 > Picking this project up cold? Read **[HANDOVER.md](HANDOVER.md)** first — it
 > has the design rationale, the safety invariants, and what is and isn't tested.
+> Coding agents: **[AGENTS.md](AGENTS.md)** is the constraint list; it points
+> back here.
 
 ## Why this shape
 

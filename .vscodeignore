@@ -1,5 +1,6 @@
 .vscode/**
 .github/**
+AGENTS.md
 src/**
 test/**
 out/**
