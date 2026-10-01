@@ -1,0 +1,290 @@
+{
+  "name": "idea-git",
+  "displayName": "IDEA Git \u2014 Changelists & Diff",
+  "description": "Brings IntelliJ IDEA's changelists and revision diff workflow to VS Code. Complements the built-in Git view and Git Graph+ rather than replacing them.",
+  "version": "0.1.0",
+  "publisher": "local",
+  "license": "Apache-2.0",
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": [
+    "SCM Providers"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./dist/extension.js",
+  "extensionDependencies": [
+    "vscode.git"
+  ],
+  "contributes": {
+    "configuration": {
+      "title": "IDEA Git",
+      "properties": {
+        "ideaGit.changelists.autoAssignToActive": {
+          "type": "boolean",
+          "default": true,
+          "description": "Newly modified files are automatically assigned to the active changelist."
+        },
+        "ideaGit.changelists.persistIntervalMs": {
+          "type": "number",
+          "default": 4000,
+          "description": "How often changelist contents are snapshotted into git objects (0 disables background snapshots)."
+        },
+        "ideaGit.diff.openSideBySide": {
+          "type": "boolean",
+          "default": true,
+          "description": "Open revision diffs in a side-by-side editor."
+        },
+        "ideaGit.integration.gitGraphPlus": {
+          "type": "boolean",
+          "default": true,
+          "description": "Delegate graph and branch actions to the Git Graph+ extension when it is installed."
+        }
+      }
+    },
+    "commands": [
+      {
+        "command": "ideaGit.changelist.create",
+        "title": "New Changelist",
+        "category": "IDEA Git",
+        "icon": "$(new-folder)"
+      },
+      {
+        "command": "ideaGit.changelist.rename",
+        "title": "Rename Changelist",
+        "category": "IDEA Git",
+        "icon": "$(edit)"
+      },
+      {
+        "command": "ideaGit.changelist.delete",
+        "title": "Delete Changelist",
+        "category": "IDEA Git",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "ideaGit.changelist.setActive",
+        "title": "Set Active Changelist",
+        "category": "IDEA Git",
+        "icon": "$(check)"
+      },
+      {
+        "command": "ideaGit.changelist.moveTo",
+        "title": "Move to Changelist\u2026",
+        "category": "IDEA Git",
+        "icon": "$(arrow-right)"
+      },
+      {
+        "command": "ideaGit.changelist.commit",
+        "title": "Commit Changelist",
+        "category": "IDEA Git",
+        "icon": "$(check-all)"
+      },
+      {
+        "command": "ideaGit.changelist.shelve",
+        "title": "Shelve Changelist",
+        "category": "IDEA Git",
+        "icon": "$(archive)"
+      },
+      {
+        "command": "ideaGit.changelist.unshelve",
+        "title": "Unshelve\u2026",
+        "category": "IDEA Git",
+        "icon": "$(inbox)"
+      },
+      {
+        "command": "ideaGit.changelist.rollback",
+        "title": "Rollback Changelist",
+        "category": "IDEA Git",
+        "icon": "$(discard)"
+      },
+      {
+        "command": "ideaGit.changelist.refresh",
+        "title": "Refresh Changelists",
+        "category": "IDEA Git",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "ideaGit.diff.withRevision",
+        "title": "Compare with Revision\u2026",
+        "category": "IDEA Git",
+        "icon": "$(git-compare)"
+      },
+      {
+        "command": "ideaGit.diff.withBranch",
+        "title": "Compare with Branch\u2026",
+        "category": "IDEA Git"
+      },
+      {
+        "command": "ideaGit.diff.betweenRevisions",
+        "title": "Compare Two Revisions\u2026",
+        "category": "IDEA Git"
+      },
+      {
+        "command": "ideaGit.diff.changelist",
+        "title": "Show Diff for Changelist",
+        "category": "IDEA Git",
+        "icon": "$(git-compare)"
+      },
+      {
+        "command": "ideaGit.diff.fileHistory",
+        "title": "Show File History",
+        "category": "IDEA Git",
+        "icon": "$(history)"
+      },
+      {
+        "command": "ideaGit.vcs.update",
+        "title": "Update Project (pull --rebase)",
+        "category": "IDEA Git",
+        "icon": "$(cloud-download)"
+      },
+      {
+        "command": "ideaGit.vcs.push",
+        "title": "Push",
+        "category": "IDEA Git",
+        "icon": "$(cloud-upload)"
+      },
+      {
+        "command": "ideaGit.vcs.openGraph",
+        "title": "Show Git Log",
+        "category": "IDEA Git",
+        "icon": "$(graph)"
+      }
+    ],
+    "views": {
+      "scm": [
+        {
+          "id": "ideaGit.changelists",
+          "name": "Changelists",
+          "visibility": "visible"
+        }
+      ]
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "ideaGit.changelist.create",
+          "when": "view == ideaGit.changelists",
+          "group": "navigation@1"
+        },
+        {
+          "command": "ideaGit.vcs.update",
+          "when": "view == ideaGit.changelists",
+          "group": "navigation@2"
+        },
+        {
+          "command": "ideaGit.vcs.push",
+          "when": "view == ideaGit.changelists",
+          "group": "navigation@3"
+        },
+        {
+          "command": "ideaGit.vcs.openGraph",
+          "when": "view == ideaGit.changelists",
+          "group": "navigation@4"
+        },
+        {
+          "command": "ideaGit.changelist.refresh",
+          "when": "view == ideaGit.changelists",
+          "group": "navigation@5"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "ideaGit.changelist.setActive",
+          "when": "view == ideaGit.changelists && viewItem =~ /^changelist\\\\./",
+          "group": "inline@1"
+        },
+        {
+          "command": "ideaGit.changelist.commit",
+          "when": "view == ideaGit.changelists && viewItem =~ /^changelist\\\\./",
+          "group": "1_commit@1"
+        },
+        {
+          "command": "ideaGit.diff.changelist",
+          "when": "view == ideaGit.changelists && viewItem =~ /^changelist\\\\./",
+          "group": "1_commit@2"
+        },
+        {
+          "command": "ideaGit.changelist.shelve",
+          "when": "view == ideaGit.changelists && viewItem =~ /^changelist\\\\./",
+          "group": "2_shelve@1"
+        },
+        {
+          "command": "ideaGit.changelist.rename",
+          "when": "view == ideaGit.changelists && viewItem == changelist.custom",
+          "group": "3_edit@1"
+        },
+        {
+          "command": "ideaGit.changelist.delete",
+          "when": "view == ideaGit.changelists && viewItem == changelist.custom",
+          "group": "4_danger@1"
+        },
+        {
+          "command": "ideaGit.changelist.rollback",
+          "when": "view == ideaGit.changelists && viewItem =~ /^changelist\\\\./",
+          "group": "4_danger@2"
+        },
+        {
+          "command": "ideaGit.changelist.moveTo",
+          "when": "view == ideaGit.changelists && viewItem == changelistFile",
+          "group": "1_move@1"
+        },
+        {
+          "command": "ideaGit.diff.withRevision",
+          "when": "view == ideaGit.changelists && viewItem == changelistFile",
+          "group": "2_diff@1"
+        },
+        {
+          "command": "ideaGit.diff.fileHistory",
+          "when": "view == ideaGit.changelists && viewItem == changelistFile",
+          "group": "2_diff@2"
+        }
+      ],
+      "scm/resourceState/context": [
+        {
+          "command": "ideaGit.changelist.moveTo",
+          "when": "scmProvider == git",
+          "group": "1_modification@100"
+        }
+      ],
+      "editor/title/context": [
+        {
+          "command": "ideaGit.diff.withRevision",
+          "group": "ideaGit@1"
+        },
+        {
+          "command": "ideaGit.diff.fileHistory",
+          "group": "ideaGit@2"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "ideaGit.changelist.rename",
+          "when": "false"
+        },
+        {
+          "command": "ideaGit.changelist.delete",
+          "when": "false"
+        },
+        {
+          "command": "ideaGit.changelist.setActive",
+          "when": "false"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "build": "node esbuild.js",
+    "watch": "node esbuild.js --watch",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test dist-test/test/*.test.js",
+    "pretest": "tsc -p tsconfig.test.json"
+  },
+  "devDependencies": {
+    "@types/node": "^22.5.0",
+    "@types/vscode": "^1.90.0",
+    "esbuild": "^0.23.0",
+    "typescript": "^5.5.0"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "dist-test",
+    "rootDir": ".",
+    "noUnusedLocals": false,
+    "types": [
+      "node"
+    ]
+  },
+  "include": [
+    "src/git/**/*.ts",
+    "src/changelists/model.ts",
+    "src/changelists/store.ts",
+    "src/changelists/operations.ts",
+    "test/**/*.ts"
+  ]
+}
